@@ -1,10 +1,10 @@
-use crate::ast::FnDef;
+use crate::ast::{Function};
 use crate::parser::cursor::Parser;
 use crate::parser::error::ParseError;
 use crate::parser::lexer::Token;
 use crate::parser::stmt::parse_stmt;
 
-pub fn parse_fn(p: &mut Parser) -> Result<FnDef, ParseError> {
+pub fn parse_fn(p: &mut Parser) -> Result<Function, ParseError> {
     p.expect(&Token::Fn)?;
     let name = p.expect_ident()?;
     p.expect(&Token::LParen)?;
@@ -16,7 +16,7 @@ pub fn parse_fn(p: &mut Parser) -> Result<FnDef, ParseError> {
         body.push(parse_stmt(p)?);
     }
     p.expect(&Token::RBrace)?;
-    Ok(FnDef { name, params, body })
+    Ok(Function { name, params, body })
 }
 
 fn parse_param_list(p: &mut Parser) -> Result<Vec<String>, ParseError> {

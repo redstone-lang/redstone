@@ -1,4 +1,4 @@
-use crate::parser::error::{make_error, ParseError};
+use crate::parser::error::{self, ParseError};
 use crate::parser::lexer::{Spanned, Token};
 
 pub struct Parser<'src> {
@@ -49,7 +49,7 @@ impl<'src> Parser<'src> {
     }
 
     pub fn error_at(&self, pos: usize, message: impl Into<String>) -> ParseError {
-        make_error(self.src, pos, message)
+        error::new(self.src, pos, message)
     }
 
     pub fn is_eof(&self) -> bool {

@@ -23,7 +23,7 @@ impl fmt::Display for ParseError {
     }
 }
 
-pub fn make_error(src: &str, pos: usize, message: impl Into<String>) -> ParseError {
+pub fn new(src: &str, pos: usize, message: impl Into<String>) -> ParseError {
     let before = &src[..pos.min(src.len())];
     let line = before.chars().filter(|&c| c == '\n').count() + 1;
     let col = before.rfind('\n').map(|i| pos - i - 1).unwrap_or(pos) + 1;

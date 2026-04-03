@@ -1,5 +1,5 @@
 use inkwell::AddressSpace;
-use crate::ast::FnDef;
+use crate::ast::Function;
 use super::{Codegen, Vars};
 use super::stmt::compile_stmt;
 
@@ -9,17 +9,17 @@ pub fn declare_printf(cg: &Codegen) {
     cg.module.add_function("printf", printf_t, None);
 }
 
-pub fn compile_fn(cg: &mut Codegen, fn_def: &FnDef) {
+pub fn compile_fn(cg: &mut Codegen, func_def: &Function) {
     let i64_t = cg.ctx.i64_type();
-    let param_types: Vec<_> = fn_def.params.iter().map(|_| i64_t.into()).collect();
+    let param_types: Vec<_> = func_def.params.iter().map(|_| i64_t.into()).collect();
     let func = cg
         .module
-        .add_function(&fn_def.name, i64_t.fn_type(&param_types, false), None);
+        .add_function(&func_def.name, i64_t.fn_type(&param_types, false), None);
     let entry = cg.ctx.append_basic_block(func, "entry");
     cg.builder.position_at_end(entry);
 
     let mut vars: Vars = Vars::new();
-    for (i, param) in fn_def.params.iter().enumerate() {
+    for (i, param) in func_def.params.iter().enumerate() {
         let slot = cg.builder.build_alloca(i64_t, param).unwrap();
         cg.builder
             .build_store(slot, func.get_nth_param(i as u32).unwrap())
@@ -27,7 +27,7 @@ pub fn compile_fn(cg: &mut Codegen, fn_def: &FnDef) {
         vars.insert(param.clone(), slot);
     }
 
-    for stmt in &fn_def.body {
+    for stmt in &func_def.body {
         compile_stmt(cg, stmt, func, &mut vars);
     }
 

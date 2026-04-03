@@ -1,13 +1,13 @@
 mod expr;
 mod stmt;
-mod fn_def;
+mod function;
 
 use std::collections::HashMap;
 use inkwell::builder::Builder;
 use inkwell::context::Context;
 use inkwell::module::Module;
 use inkwell::values::PointerValue;
-use crate::ast::FnDef;
+use crate::ast::Function;
 
 pub struct Codegen<'ctx> {
     pub(crate) ctx: &'ctx Context,
@@ -24,10 +24,10 @@ impl<'ctx> Codegen<'ctx> {
         }
     }
 
-    pub fn compile(&mut self, fns: &[FnDef]) {
-        fn_def::declare_printf(self);
+    pub fn compile(&mut self, fns: &[Function]) {
+        function::declare_printf(self);
         for f in fns {
-            fn_def::compile_fn(self, f);
+            function::compile_fn(self, f);
         }
     }
 
