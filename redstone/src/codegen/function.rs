@@ -1,9 +1,10 @@
 use inkwell::AddressSpace;
 use inkwell::types::{BasicMetadataTypeEnum, BasicType};
 use crate::ast::Type;
-use crate::typecheck::TFunction;
+use crate::typecheck::{TFunction, TStmt};
 use super::{Codegen, Vars};
 use super::stmt::compile_stmt;
+use super::expr::compile_expr;
 use super::types::llvm_type;
 
 pub fn declare_printf(cg: &Codegen) {
@@ -41,15 +42,31 @@ pub fn compile_fn(cg: &mut Codegen, func_def: &TFunction) {
         vars.insert(name.clone(), (slot, llty));
     }
 
-    for stmt in &func_def.body {
+    // If last stmt is a bare Expr and return type is non-Unit, treat it as implicit return
+    let (main_stmts, implicit_ret) = match (func_def.ret != Type::Unit, func_def.body.last()) {
+        (true, Some(TStmt::Expr(_))) => {
+            let split = func_def.body.len() - 1;
+            (&func_def.body[..split], Some(&func_def.body[split]))
+        }
+        _ => (&func_def.body[..], None),
+    };
+
+    for stmt in main_stmts {
         compile_stmt(cg, stmt, func, &mut vars);
+    }
+
+    if let Some(TStmt::Expr(expr)) = implicit_ret {
+        if func.get_last_basic_block().unwrap().get_terminator().is_none() {
+            let val = compile_expr(cg, expr, func, &mut vars);
+            cg.builder.build_return(Some(&val)).unwrap();
+        }
     }
 
     if func.get_last_basic_block().unwrap().get_terminator().is_none() {
         match &func_def.ret {
             Type::Unit => { cg.builder.build_return(None).unwrap(); }
-            ret_ty => {
-                let zero = llvm_type(cg.ctx, ret_ty).into_int_type().const_int(0, false);
+            _ => {
+                let zero = llvm_type(cg.ctx, &func_def.ret).into_int_type().const_int(0, false);
                 cg.builder.build_return(Some(&zero)).unwrap();
             }
         }

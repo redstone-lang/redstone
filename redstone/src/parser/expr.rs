@@ -13,7 +13,7 @@ pub fn parse_expr(p: &mut Parser) -> Result<Expr, ParseError> {
     Ok(lhs)
 }
 
-fn parse_term(p: &mut Parser) -> Result<Expr, ParseError> {
+pub fn parse_term(p: &mut Parser) -> Result<Expr, ParseError> {
     match p.peek() {
         Some(Token::Int(_)) => {
             let s = p.bump().unwrap();
@@ -74,12 +74,18 @@ fn parse_arg_list(p: &mut Parser) -> Result<Vec<Expr>, ParseError> {
     Ok(args)
 }
 
-fn peek_binop(p: &Parser) -> Option<BinOp> {
+pub fn peek_binop(p: &Parser) -> Option<BinOp> {
     match p.peek() {
         Some(Token::Plus)  => Some(BinOp::Add),
         Some(Token::Minus) => Some(BinOp::Sub),
         Some(Token::Star)  => Some(BinOp::Mul),
         Some(Token::Slash) => Some(BinOp::Div),
+        Some(Token::Lt)    => Some(BinOp::Lt),
+        Some(Token::Gt)    => Some(BinOp::Gt),
+        Some(Token::Le)    => Some(BinOp::Le),
+        Some(Token::Ge)    => Some(BinOp::Ge),
+        Some(Token::EqEq)  => Some(BinOp::Eq),
+        Some(Token::Ne)    => Some(BinOp::Ne),
         _ => None,
     }
 }

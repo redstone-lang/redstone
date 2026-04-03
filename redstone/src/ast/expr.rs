@@ -4,6 +4,12 @@ pub enum BinOp {
     Sub,
     Mul,
     Div,
+    Lt,
+    Gt,
+    Le,
+    Ge,
+    Eq,
+    Ne,
 }
 
 #[derive(Debug, Clone)]

@@ -17,6 +17,29 @@ pub fn compile_stmt<'ctx>(
             cg.builder.build_store(slot, val).unwrap();
             vars.insert(name.clone(), (slot, ty));
         }
+        TStmt::Assign(name, expr) => {
+            let val = compile_expr(cg, expr, func, vars);
+            let (ptr, _) = vars[name];
+            cg.builder.build_store(ptr, val).unwrap();
+        }
+        TStmt::While(cond, body) => {
+            let cond_bb = cg.ctx.append_basic_block(func, "while.cond");
+            let body_bb = cg.ctx.append_basic_block(func, "while.body");
+            let exit_bb = cg.ctx.append_basic_block(func, "while.exit");
+
+            cg.builder.build_unconditional_branch(cond_bb).unwrap();
+            cg.builder.position_at_end(cond_bb);
+            let cond_val = compile_expr(cg, cond, func, vars).into_int_value();
+            cg.builder.build_conditional_branch(cond_val, body_bb, exit_bb).unwrap();
+
+            cg.builder.position_at_end(body_bb);
+            for s in body {
+                compile_stmt(cg, s, func, vars);
+            }
+            cg.builder.build_unconditional_branch(cond_bb).unwrap();
+
+            cg.builder.position_at_end(exit_bb);
+        }
         TStmt::Return(expr) => {
             let val = compile_expr(cg, expr, func, vars);
             cg.builder.build_return(Some(&val)).unwrap();

@@ -9,6 +9,19 @@
 | `*`      | Multiplication |
 | `/`      | Division (integer, truncates toward zero) |
 
+## Comparison Operators
+
+| Operator | Description           |
+|----------|-----------------------|
+| `<`      | Less than             |
+| `>`      | Greater than          |
+| `<=`     | Less than or equal    |
+| `>=`     | Greater than or equal |
+| `==`     | Equal                 |
+| `!=`     | Not equal             |
+
+Comparison expressions evaluate to `bool`.
+
 ```
 fn main() {
     let a = 10;

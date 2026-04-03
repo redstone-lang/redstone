@@ -18,3 +18,13 @@ fn main() {
 - No type annotation required — defaults to `i64`; use `: Type` to specify another type
 - The right-hand side can be any expression, including function calls
 - Variables are scoped to the function they are declared in
+
+## Reassignment
+
+A variable declared with `let` can be reassigned:
+
+```
+x = <expression>;
+```
+
+Compound assignment operators are also available: `+=`, `-=`, `*=`, `/=`. See [Control Flow](control-flow.md) for details.

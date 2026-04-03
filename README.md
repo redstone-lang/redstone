@@ -5,7 +5,9 @@ A minimal compiler with an LLVM backend. The source is parsed using logos, LLVM 
 - Primitive types: `i8`, `i16`, `i32`, `i64`, `i128`, `isize`, `u8`, `u16`, `u32`, `u64`, `u128`, `usize`, `f32`, `f64`, `bool`, `char`, `()`
 - Default type is `i64` when no annotation is given
 - Functions are declared using `fn`, with optional typed params and return type
-- Variables using `let`, with optional type annotation
+- Variables using `let`, with optional type annotation; reassignment with `x = ...` and `x += ...` etc.
+- `while` loops with comparison operators: `<`, `>`, `<=`, `>=`, `==`, `!=`
+- Implicit return: last expression in a function body without `;`
 - Output using `print(...)`
 - Comments using `//`
 
@@ -118,6 +120,28 @@ fn main() {
 }
 ```
 
+### Fibonacci
+
+```
+fn fibonacci(n: u64) -> u64 {
+    let a = 1;
+    let b = 0;
+    let count = 0;
+    while count < n {
+        let tmp = a + b;
+        b = a;
+        a = tmp;
+        count += 1;
+    }
+    b
+}
+
+fn main() -> i32 {
+    print(fibonacci(32)); // 2178309
+    return 0;
+}
+```
+
 ### Expressions in Arguments
 
 ```
@@ -175,8 +199,7 @@ rsc run main.red
 
 ## Limitations
 
-- No conditions (`if`) or loops (`while`)
+- No conditions (`if`)
 - No strings
 - No recursion with non-trivial depth (no tail call optimization)
 - `print` outputs integers as decimal, floats with `%g`, booleans as `0`/`1`, chars as their code point
-- Type annotations on `let` are required for integer literals unless the type can be inferred from context (e.g. from a function call argument or a binary operation with a typed operand)

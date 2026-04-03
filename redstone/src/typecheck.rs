@@ -43,6 +43,8 @@ impl TExpr {
 #[derive(Debug, Clone)]
 pub enum TStmt {
     Let(String, TExpr),
+    Assign(String, TExpr),
+    While(TExpr, Vec<TStmt>),
     Return(TExpr),
     Print(TExpr),
     Expr(TExpr),
@@ -89,19 +91,53 @@ fn check_fn(f: &Function, sigs: &FnSigs) -> Result<TFunction, TypeError> {
         })
         .collect();
 
-    let body = f.body.iter()
-        .map(|s| check_stmt(s, &mut env, sigs, ret))
+    let n = f.body.len();
+    let body = f.body.iter().enumerate()
+        .map(|(i, s)| {
+            // last bare Expr gets a hint of the return type for implicit return
+            let hint_ret = if i + 1 == n {
+                if let Stmt::Expr(_) = s { Some(ret) } else { None }
+            } else { None };
+            check_stmt_with_hint(s, &mut env, sigs, ret, hint_ret)
+        })
         .collect::<Result<Vec<_>, _>>()?;
 
     Ok(TFunction { name: f.name.clone(), params, ret: ret.clone(), body })
 }
 
 fn check_stmt(stmt: &Stmt, env: &mut Env, sigs: &FnSigs, ret_ty: &Type) -> Result<TStmt, TypeError> {
+    check_stmt_with_hint(stmt, env, sigs, ret_ty, None)
+}
+
+fn check_stmt_with_hint(stmt: &Stmt, env: &mut Env, sigs: &FnSigs, ret_ty: &Type, expr_hint: Option<&Type>) -> Result<TStmt, TypeError> {
     match stmt {
         Stmt::Let(name, ann, expr) => {
             let texpr = infer_expr(expr, ann.as_ref(), env, sigs)?;
             env.insert(name.clone(), texpr.ty());
             Ok(TStmt::Let(name.clone(), texpr))
+        }
+        Stmt::Assign(name, expr) => {
+            let ty = env.get(name).cloned().ok_or_else(|| TypeError {
+                message: format!("undefined variable `{name}`"),
+            })?;
+            let texpr = infer_expr(expr, Some(&ty), env, sigs)?;
+            Ok(TStmt::Assign(name.clone(), texpr))
+        }
+        Stmt::AssignOp(name, op, expr) => {
+            let ty = env.get(name).cloned().ok_or_else(|| TypeError {
+                message: format!("undefined variable `{name}`"),
+            })?;
+            let texpr = infer_expr(expr, Some(&ty), env, sigs)?;
+            let var = TExpr::Var(name.clone(), ty.clone());
+            let combined = TExpr::BinOp(Box::new(var), op.clone(), Box::new(texpr), ty);
+            Ok(TStmt::Assign(name.clone(), combined))
+        }
+        Stmt::While(cond, body) => {
+            let tcond = infer_expr(cond, Some(&Type::Bool), env, sigs)?;
+            let tbody = body.iter()
+                .map(|s| check_stmt(s, env, sigs, ret_ty))
+                .collect::<Result<Vec<_>, _>>()?;
+            Ok(TStmt::While(tcond, tbody))
         }
         Stmt::Return(expr) => {
             let texpr = infer_expr(expr, Some(ret_ty), env, sigs)?;
@@ -112,7 +148,7 @@ fn check_stmt(stmt: &Stmt, env: &mut Env, sigs: &FnSigs, ret_ty: &Type) -> Resul
             Ok(TStmt::Print(texpr))
         }
         Stmt::Expr(expr) => {
-            let texpr = infer_expr(expr, None, env, sigs)?;
+            let texpr = infer_expr(expr, expr_hint, env, sigs)?;
             Ok(TStmt::Expr(texpr))
         }
     }
@@ -126,11 +162,7 @@ fn infer_expr(expr: &Expr, hint: Option<&Type>, env: &Env, sigs: &FnSigs) -> Res
             let ty = hint
                 .filter(|t| t.is_numeric())
                 .cloned()
-                .ok_or_else(|| TypeError {
-                    message: format!(
-                        "integer literal `{n}` has ambiguous type; add a type annotation (e.g. `let x: i32 = {n};`)"
-                    ),
-                })?;
+                .unwrap_or(Type::I64);
             Ok(TExpr::Int(*n, ty))
         }
         Expr::Float(f) => {
@@ -152,15 +184,24 @@ fn infer_expr(expr: &Expr, hint: Option<&Type>, env: &Env, sigs: &FnSigs) -> Res
         }
 
         Expr::BinOp(lhs, op, rhs) => {
-            let tlhs = infer_expr(lhs, hint, env, sigs)?;
-            let trhs = infer_expr(rhs, Some(&tlhs.ty()), env, sigs)?;
-            let ty = tlhs.ty();
-            if ty != trhs.ty() {
-                return Err(TypeError {
-                    message: format!("type mismatch in binary operation: `{:?}` vs `{:?}`", ty, trhs.ty()),
-                });
+            match op {
+                BinOp::Lt | BinOp::Gt | BinOp::Le | BinOp::Ge | BinOp::Eq | BinOp::Ne => {
+                    let tlhs = infer_expr(lhs, None, env, sigs)?;
+                    let trhs = infer_expr(rhs, Some(&tlhs.ty()), env, sigs)?;
+                    Ok(TExpr::BinOp(Box::new(tlhs), op.clone(), Box::new(trhs), Type::Bool))
+                }
+                _ => {
+                    let tlhs = infer_expr(lhs, hint, env, sigs)?;
+                    let trhs = infer_expr(rhs, Some(&tlhs.ty()), env, sigs)?;
+                    let ty = tlhs.ty();
+                    if ty != trhs.ty() {
+                        return Err(TypeError {
+                            message: format!("type mismatch in binary operation: `{:?}` vs `{:?}`", ty, trhs.ty()),
+                        });
+                    }
+                    Ok(TExpr::BinOp(Box::new(tlhs), op.clone(), Box::new(trhs), ty))
+                }
             }
-            Ok(TExpr::BinOp(Box::new(tlhs), op.clone(), Box::new(trhs), ty))
         }
 
         Expr::Call(name, args) => {
