@@ -1,0 +1,12 @@
+[package]
+name = "redstone"
+version = "0.0.0-dev"
+edition = "2024"
+
+[lib]
+name = "redstone"
+path = "src/lib.rs"
+
+[dependencies]
+logos = "0.16.1"
+inkwell = { git = "https://github.com/TheDan64/inkwell", branch = "master", features = ["llvm22-1"] }

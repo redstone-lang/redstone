@@ -101,6 +101,47 @@ fn main() {
 }
 ```
 
+## CLI (`rsc`)
+
+The `rsc` binary is the command-line interface to the compiler.
+
+### Build
+
+Compile a `.red` source file into a native executable:
+
+```
+rsc build <file>
+```
+
+Options:
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `-o`, `--output <path>` | `a.out` | Output executable path |
+| `--target <triple>` | host target | Target triple (e.g. `x86_64-unknown-linux-gnu`) |
+
+Examples:
+
+```
+rsc build main.red
+rsc build main.red --output my_program
+rsc build main.red --output my_program --target x86_64-unknown-linux-gnu
+```
+
+### Run
+
+Compile and immediately execute a `.red` source file:
+
+```
+rsc run <file>
+```
+
+Example:
+
+```
+rsc run main.red
+```
+
 ## Limitations
 
 - The only data type is `i64`
