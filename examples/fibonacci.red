@@ -13,6 +13,7 @@ fn fibonacci(n: u64) -> u64 {
     b
 }
 
-fn main() {
+fn main() -> i32 {
     print(fibonacci(32));
+    return 0;
 }

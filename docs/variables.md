@@ -3,7 +3,7 @@
 Variables are declared with `let`. They are immutable after assignment.
 
 ```
-let <name> = <expression>;
+let <name>[: <type>] = <expression>;
 ```
 
 ```
@@ -15,6 +15,6 @@ fn main() {
 }
 ```
 
-- No type annotation — the type is always `i64`
+- No type annotation required — defaults to `i64`; use `: Type` to specify another type
 - The right-hand side can be any expression, including function calls
 - Variables are scoped to the function they are declared in

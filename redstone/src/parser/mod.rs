@@ -4,6 +4,7 @@ mod cursor;
 mod expr;
 mod stmt;
 mod function;
+mod types;
 
 use crate::ast::Function;
 use cursor::Parser;

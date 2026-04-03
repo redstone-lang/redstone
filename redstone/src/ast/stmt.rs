@@ -1,8 +1,8 @@
-use crate::ast::Expr;
+use crate::ast::{Expr, Type};
 
 #[derive(Debug, Clone)]
 pub enum Stmt {
-    Let(String, Expr),
+    Let(String, Option<Type>, Expr),
     Return(Expr),
     Print(Expr),
     Expr(Expr),

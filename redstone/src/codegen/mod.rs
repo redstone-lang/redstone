@@ -1,13 +1,15 @@
 mod expr;
 mod stmt;
 mod function;
+mod types;
 
 use std::collections::HashMap;
 use inkwell::builder::Builder;
 use inkwell::context::Context;
 use inkwell::module::Module;
 use inkwell::values::PointerValue;
-use crate::ast::Function;
+use inkwell::types::BasicTypeEnum;
+use crate::typecheck::TFunction;
 
 pub struct Codegen<'ctx> {
     pub(crate) ctx: &'ctx Context,
@@ -24,7 +26,7 @@ impl<'ctx> Codegen<'ctx> {
         }
     }
 
-    pub fn compile(&mut self, fns: &[Function]) {
+    pub fn compile(&mut self, fns: &[TFunction]) {
         function::declare_printf(self);
         for f in fns {
             function::compile_fn(self, f);
@@ -56,4 +58,4 @@ impl<'ctx> Codegen<'ctx> {
     }
 }
 
-pub(crate) type Vars<'ctx> = HashMap<String, PointerValue<'ctx>>;
+pub(crate) type Vars<'ctx> = HashMap<String, (PointerValue<'ctx>, BasicTypeEnum<'ctx>)>;

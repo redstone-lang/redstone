@@ -1,10 +1,11 @@
-A minimal compiler with an LLVM backend. The source is parsed using pest, LLVM IR is generated using inkwell, and the result is linked into a native executable.
+A minimal compiler with an LLVM backend. The source is parsed using logos, LLVM IR is generated using inkwell, and the result is linked into a native executable.
 
 ## Syntax
 
-- All values ​​are integers (`i64`)
-- Functions are declared using `fn`
-- Variables using `let`
+- Primitive types: `i8`, `i16`, `i32`, `i64`, `i128`, `isize`, `u8`, `u16`, `u32`, `u64`, `u128`, `usize`, `f32`, `f64`, `bool`, `char`, `()`
+- Default type is `i64` when no annotation is given
+- Functions are declared using `fn`, with optional typed params and return type
+- Variables using `let`, with optional type annotation
 - Output using `print(...)`
 - Comments using `//`
 
@@ -29,10 +30,26 @@ fn main() {
     let diff = a - b;
     let prod = a * b;
     let quot = a / b;
-    print(sum); // 13 
-    print(diff); // 7 
-    print(prod); // 30 
-    print(quot); // 3 
+    print(sum);  // 13
+    print(diff); // 7
+    print(prod); // 30
+    print(quot); // 3
+    return 0;
+}
+```
+
+### Typed variables and floats
+
+```
+fn main() {
+    let x: i32 = 100;
+    let pi: f64 = 3.14;
+    let flag = true;
+    let letter = 'A';
+    print(x);      // 100
+    print(pi);     // 3.14
+    print(flag);   // 1
+    print(letter); // 65
     return 0;
 }
 ```
@@ -40,13 +57,27 @@ fn main() {
 ### Function call
 
 ```
-fn square(x) { 
+fn square(x) {
     return x * x;
 }
 
-fn main() { 
-let result = square(9); 
-    print(result); // 81 
+fn main() {
+    let result = square(9);
+    print(result); // 81
+    return 0;
+}
+```
+
+### Typed function
+
+```
+fn add(a: i32, b: i32) -> i32 {
+    return a + b;
+}
+
+fn main() {
+    let r = add(10, 20);
+    print(r); // 30
     return 0;
 }
 ```
@@ -54,18 +85,18 @@ let result = square(9);
 ### Multiple arguments
 
 ```
-fn add(a, b) { 
+fn add(a, b) {
     return a + b;
 }
 
-fn mul(a, b) { 
+fn mul(a, b) {
     return a * b;
 }
 
-fn main() { 
-    let x = add(3, 4); // 7 
-    let y = mul(x, 2); // 14 
-    print(y); 
+fn main() {
+    let x = add(3, 4); // 7
+    let y = mul(x, 2); // 14
+    print(y);
     return 0;
 }
 ```
@@ -144,8 +175,8 @@ rsc run main.red
 
 ## Limitations
 
-- The only data type is `i64`
 - No conditions (`if`) or loops (`while`)
 - No strings
-- No recursion with non-trivial depth (the stack is unlimited, but there is no tail call optimization)
-- `print` prints one number per call
+- No recursion with non-trivial depth (no tail call optimization)
+- `print` outputs integers as decimal, floats with `%g`, booleans as `0`/`1`, chars as their code point
+- Type annotations on `let` are required for integer literals unless the type can be inferred from context (e.g. from a function call argument or a binary operation with a typed operand)

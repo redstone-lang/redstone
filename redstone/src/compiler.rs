@@ -1,7 +1,7 @@
 use std::process::Command;
 use inkwell::context::Context;
 use inkwell::targets::{InitializationConfig, Target};
-use crate::{codegen::Codegen, parser};
+use crate::{codegen::Codegen, parser, typecheck};
 
 pub struct CompileOptions<'a> {
     pub output: &'a str,
@@ -12,10 +12,11 @@ pub fn compile(src: &str, opts: CompileOptions) -> Result<(), String> {
     Target::initialize_all(&InitializationConfig::default());
 
     let fns = parser::parse(src).map_err(|e| e.to_string())?;
+    let typed = typecheck::check_program(&fns).map_err(|e| e.to_string())?;
 
     let ctx = Context::create();
     let mut cg = Codegen::new(&ctx);
-    cg.compile(&fns);
+    cg.compile(&typed);
 
     let obj = format!("{}.o", opts.output);
     cg.emit_object(&obj);

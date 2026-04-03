@@ -19,6 +19,16 @@ fn parse_term(p: &mut Parser) -> Result<Expr, ParseError> {
             let s = p.bump().unwrap();
             if let Token::Int(n) = s.token { Ok(Expr::Int(n)) } else { unreachable!() }
         }
+        Some(Token::Float(_)) => {
+            let s = p.bump().unwrap();
+            if let Token::Float(f) = s.token { Ok(Expr::Float(f)) } else { unreachable!() }
+        }
+        Some(Token::True) => { p.bump(); Ok(Expr::Bool(true)) }
+        Some(Token::False) => { p.bump(); Ok(Expr::Bool(false)) }
+        Some(Token::Char(_)) => {
+            let s = p.bump().unwrap();
+            if let Token::Char(c) = s.token { Ok(Expr::Char(c)) } else { unreachable!() }
+        }
         Some(Token::Ident(_)) => {
             let name = p.expect_ident()?;
             if p.peek() == Some(&Token::LParen) {
@@ -32,6 +42,10 @@ fn parse_term(p: &mut Parser) -> Result<Expr, ParseError> {
         }
         Some(Token::LParen) => {
             p.bump();
+            if p.peek() == Some(&Token::RParen) {
+                p.bump();
+                return Ok(Expr::Unit);
+            }
             let expr = parse_expr(p)?;
             p.expect(&Token::RParen)?;
             Ok(expr)
