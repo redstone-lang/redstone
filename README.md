@@ -1,4 +1,4 @@
-A minimal compiler with an LLVM backend. The source is parsed using logos, LLVM IR is generated using inkwell, and the result is linked into a native executable.
+A minimal compiler with an LLVM backend. Visit [docs](./docs/README.md) to learn the language
 
 ## Syntax
 
