@@ -1,6 +1,6 @@
 # Variables
 
-Variables are declared with `let`. They are immutable after assignment.
+Variables are declared with `let`. They can be reassigned after declaration.
 
 ```red
 let <name>[: <type>] = <expression>;

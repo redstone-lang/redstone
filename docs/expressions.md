@@ -2,11 +2,11 @@
 
 ## Arithmetic Operators
 
-| Operator | Description    |
-|----------|----------------|
-| `+`      | Addition       |
-| `-`      | Subtraction    |
-| `*`      | Multiplication |
+| Operator | Description                               |
+|----------|-------------------------------------------|
+| `+`      | Addition                                  |
+| `-`      | Subtraction                               |
+| `*`      | Multiplication                            |
 | `/`      | Division (integer, truncates toward zero) |
 
 ## Comparison Operators
@@ -55,4 +55,11 @@ Integer literals are decimal numbers, optionally negative:
 ```red
 let a = 42;
 let b = -7;
+```
+
+Float literals require a decimal point and default to `f64`:
+
+```red
+let pi = 3.14;
+let half: f32 = 0.5;
 ```

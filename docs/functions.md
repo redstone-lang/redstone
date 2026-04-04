@@ -3,17 +3,44 @@
 ## Declaration
 
 ```red
-fn <name>(<params>) {
+fn <name>(<params>) -> <return_type> {
     <body>
-    return <expression>;
 }
 ```
 
-Parameters are comma-separated names with no type annotations.
+Parameters are comma-separated and **require type annotations**. The return type after `->` is optional and defaults to `()`.
 
 ```red
-fn add(a, b) {
+fn add(a: i64, b: i64) -> i64 {
     return a + b;
+}
+```
+
+## Return type
+
+Explicit return type is written after `->`:
+
+```red
+fn square(x: u64) -> u64 {
+    return x * x;
+}
+```
+
+Omitting `->` is equivalent to `-> ()`:
+
+```red
+fn greet() {
+    print(72); // 'H'
+}
+```
+
+## Implicit return
+
+The last expression in a function body without a trailing `;` is the return value:
+
+```red
+fn mul(a: u64, b: u64) -> u64 {
+    a * b
 }
 ```
 
@@ -22,7 +49,7 @@ fn add(a, b) {
 Every program must define a `main` function. It should return `0`.
 
 ```red
-fn main() {
+fn main() -> i32 {
     return 0;
 }
 ```
@@ -47,9 +74,16 @@ print(double(inc(5))); // 12
 
 ## Output
 
-`print` is a built-in that prints a single `i64` value to stdout:
+`print` is a built-in that prints a single value to stdout. It accepts any primitive type:
+
+- integers — printed as decimal
+- floats — printed with `%g`
+- `bool` — printed as `0` or `1`
+- `char` — printed as its numeric code point
 
 ```red
 print(42);
-print(result);
+print(3.14);
+print(true);  // 1
+print('A');   // 65
 ```
