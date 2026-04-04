@@ -2,11 +2,11 @@
 
 Variables are declared with `let`. They are immutable after assignment.
 
-```
+```red
 let <name>[: <type>] = <expression>;
 ```
 
-```
+```red
 fn main() {
     let a = 10;
     let b = a * 2;
@@ -23,7 +23,7 @@ fn main() {
 
 A variable declared with `let` can be reassigned:
 
-```
+```red
 x = <expression>;
 ```
 

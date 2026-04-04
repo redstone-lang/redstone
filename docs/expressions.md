@@ -22,7 +22,7 @@
 
 Comparison expressions evaluate to `bool`.
 
-```
+```red
 fn main() {
     let a = 10;
     let b = 3;
@@ -38,13 +38,13 @@ fn main() {
 
 Standard math precedence applies: `*` and `/` bind tighter than `+` and `-`.
 
-```
+```red
 let x = 2 + 3 * 4; // 14, not 20
 ```
 
 Use parentheses to control evaluation order:
 
-```
+```red
 let x = (2 + 3) * 4; // 20
 ```
 
@@ -52,7 +52,7 @@ let x = (2 + 3) * 4; // 20
 
 Integer literals are decimal numbers, optionally negative:
 
-```
+```red
 let a = 42;
 let b = -7;
 ```

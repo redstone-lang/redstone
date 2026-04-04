@@ -13,7 +13,7 @@ Redstone is a minimal compiled language with an LLVM backend.
 
 ## Quick Example
 
-```
+```red
 fn main() {
     let x = 21 * 2;
     print(x); // 42

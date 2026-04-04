@@ -34,7 +34,7 @@ Float literals require a decimal point: `3.14`, `0.5`, `1.0`.
 
 `bool` — either `true` or `false`.
 
-```
+```red
 let flag = true;
 let other = false;
 ```
@@ -45,7 +45,7 @@ let other = false;
 
 Literals use single quotes:
 
-```
+```red
 let letter = 'A';
 let emoji  = '\u{1F600}';
 ```
@@ -56,7 +56,7 @@ let emoji  = '\u{1F600}';
 
 `()` — the unit type. Its only value is `()`. Used as the return type of functions that produce no value.
 
-```
+```red
 fn greet() -> () {
     print(72);  // 'H'
 }
@@ -74,7 +74,7 @@ Type annotations are required wherever the type cannot be inferred from the valu
 - `bool`, `char`, `()` literals are always unambiguous
 - Integer literals are ambiguous — a type annotation or context is required:
 
-```
+```red
 let x: i32 = 10;        // annotation on let
 let y: i64 = x * 2;     // 2 is resolved from x's type
 let z = square(9);      // 9 is resolved from the param type of square
@@ -82,7 +82,7 @@ let z = square(9);      // 9 is resolved from the param type of square
 
 Function parameters always require a type annotation. Return type is optional and defaults to `()`:
 
-```
+```red
 fn add(a: i32, b: i32) -> i32 {
     return a + b;
 }

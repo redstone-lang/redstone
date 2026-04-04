@@ -15,7 +15,7 @@ A minimal compiler with an LLVM backend. Visit [docs](./docs/README.md) to learn
 
 ### Hello, number
 
-```
+```red
 fn main() {
     print(42);
     return 0;
@@ -24,7 +24,7 @@ fn main() {
 
 ### Variables and Arithmetic
 
-```
+```red
 fn main() {
     let a = 10;
     let b = 3;
@@ -42,7 +42,7 @@ fn main() {
 
 ### Typed variables and floats
 
-```
+```red
 fn main() {
     let x: i32 = 100;
     let pi: f64 = 3.14;
@@ -58,8 +58,8 @@ fn main() {
 
 ### Function call
 
-```
-fn square(x) {
+```red
+fn square(x: u64) -> u64 {
     return x * x;
 }
 
@@ -70,29 +70,15 @@ fn main() {
 }
 ```
 
-### Typed function
-
-```
-fn add(a: i32, b: i32) -> i32 {
-    return a + b;
-}
-
-fn main() {
-    let r = add(10, 20);
-    print(r); // 30
-    return 0;
-}
-```
-
 ### Multiple arguments
 
-```
-fn add(a, b) {
+```red
+fn add(a: u64, b: u64) -> u64 {
     return a + b;
 }
 
-fn mul(a, b) {
-    return a * b;
+fn mul(a: u64, b: u64) -> u64 {
+    a * b;
 }
 
 fn main() {
@@ -105,12 +91,12 @@ fn main() {
 
 ### Nested Calls
 
-```
-fn double(x) {
+```red
+fn double(x: u64) -> u64 {
     return x * 2;
 }
 
-fn inc(x) {
+fn inc(x: u64) -> u64 {
     return x + 1;
 }
 
@@ -122,7 +108,7 @@ fn main() {
 
 ### Fibonacci
 
-```
+```red
 fn fibonacci(n: u64) -> u64 {
     let a = 1;
     let b = 0;
@@ -144,8 +130,8 @@ fn main() -> i32 {
 
 ### Expressions in Arguments
 
-```
-fn add(a, b) {
+```red
+fn add(a: u64, b: u64) -> u64 {
     return a + b;
 }
 
@@ -164,20 +150,20 @@ The `rsc` binary is the command-line interface to the compiler.
 
 Compile a `.red` source file into a native executable:
 
-```
+```sh
 rsc build <file>
 ```
 
 Options:
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| `-o`, `--output <path>` | `a.out` | Output executable path |
-| `--target <triple>` | host target | Target triple (e.g. `x86_64-unknown-linux-gnu`) |
+| Flag                    | Default     | Description                                     |
+|-------------------------|-------------|-------------------------------------------------|
+| `-o`, `--output <path>` | `a.out`     | Output executable path                          |
+| `--target <triple>`     | host target | Target triple (e.g. `x86_64-unknown-linux-gnu`) |
 
 Examples:
 
-```
+```sh
 rsc build main.red
 rsc build main.red --output my_program
 rsc build main.red --output my_program --target x86_64-unknown-linux-gnu
@@ -187,13 +173,13 @@ rsc build main.red --output my_program --target x86_64-unknown-linux-gnu
 
 Compile and immediately execute a `.red` source file:
 
-```
+```sh
 rsc run <file>
 ```
 
 Example:
 
-```
+```sh
 rsc run main.red
 ```
 
