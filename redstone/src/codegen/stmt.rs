@@ -40,6 +40,30 @@ pub fn compile_stmt<'ctx>(
 
             cg.builder.position_at_end(exit_bb);
         }
+        TStmt::If(cond, then_body, else_body) => {
+            let then_bb = cg.ctx.append_basic_block(func, "if.then");
+            let else_bb = cg.ctx.append_basic_block(func, "if.else");
+            let merge_bb = cg.ctx.append_basic_block(func, "if.merge");
+
+            let cond_val = compile_expr(cg, cond, func, vars).into_int_value();
+            cg.builder.build_conditional_branch(cond_val, then_bb, else_bb).unwrap();
+
+            cg.builder.position_at_end(then_bb);
+            for s in then_body {
+                compile_stmt(cg, s, func, vars);
+            }
+            cg.builder.build_unconditional_branch(merge_bb).unwrap();
+
+            cg.builder.position_at_end(else_bb);
+            if let Some(body) = else_body {
+                for s in body {
+                    compile_stmt(cg, s, func, vars);
+                }
+            }
+            cg.builder.build_unconditional_branch(merge_bb).unwrap();
+
+            cg.builder.position_at_end(merge_bb);
+        }
         TStmt::Return(expr) => {
             let val = compile_expr(cg, expr, func, vars);
             cg.builder.build_return(Some(&val)).unwrap();

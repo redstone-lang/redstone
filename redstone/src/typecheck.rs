@@ -45,6 +45,7 @@ pub enum TStmt {
     Let(String, TExpr),
     Assign(String, TExpr),
     While(TExpr, Vec<TStmt>),
+    If(TExpr, Vec<TStmt>, Option<Vec<TStmt>>),
     Return(TExpr),
     Print(TExpr),
     Expr(TExpr),
@@ -138,6 +139,18 @@ fn check_stmt_with_hint(stmt: &Stmt, env: &mut Env, sigs: &FnSigs, ret_ty: &Type
                 .map(|s| check_stmt(s, env, sigs, ret_ty))
                 .collect::<Result<Vec<_>, _>>()?;
             Ok(TStmt::While(tcond, tbody))
+        }
+        Stmt::If(cond, then_body, else_body) => {
+            let tcond = infer_expr(cond, Some(&Type::Bool), env, sigs)?;
+            let tthen = then_body.iter()
+                .map(|s| check_stmt(s, env, sigs, ret_ty))
+                .collect::<Result<Vec<_>, _>>()?;
+            let telse = else_body.as_ref().map(|body| {
+                body.iter()
+                    .map(|s| check_stmt(s, env, sigs, ret_ty))
+                    .collect::<Result<Vec<_>, _>>()
+            }).transpose()?;
+            Ok(TStmt::If(tcond, tthen, telse))
         }
         Stmt::Return(expr) => {
             let texpr = infer_expr(expr, Some(ret_ty), env, sigs)?;

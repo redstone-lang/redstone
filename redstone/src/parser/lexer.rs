@@ -7,6 +7,8 @@ pub enum Token {
     #[token("fn")]    Fn,
     #[token("let")]   Let,
     #[token("while")] While,
+    #[token("if")]    If,
+    #[token("else")]  Else,
     #[token("return")] Return,
     #[token("print")] Print,
     #[token("true")]  True,

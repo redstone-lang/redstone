@@ -6,6 +6,7 @@ A minimal compiler with an LLVM backend. Visit [docs](./docs/README.md) to learn
 - Default type is `i64` when no annotation is given
 - Functions are declared using `fn`, with optional typed params and return type
 - Variables using `let`, with optional type annotation; reassignment with `x = ...` and `x += ...` etc.
+- `if`/`else` conditionals
 - `while` loops with comparison operators: `<`, `>`, `<=`, `>=`, `==`, `!=`
 - Implicit return: last expression in a function body without `;`
 - Output using `print(...)`
@@ -128,6 +129,24 @@ fn main() -> i32 {
 }
 ```
 
+### Conditionals
+
+```red
+fn max(a: i64, b: i64) -> i64 {
+    let result = a;
+    if b > a {
+        result = b;
+    }
+    result
+}
+
+fn main() -> i32 {
+    print(max(3, 7));   // 7
+    print(max(10, 4));  // 10
+    return 0;
+}
+```
+
 ### Expressions in Arguments
 
 ```red
@@ -185,7 +204,6 @@ rsc run main.red
 
 ## Limitations
 
-- No conditions (`if`)
 - No strings
 - No recursion with non-trivial depth (no tail call optimization)
 - `print` outputs integers as decimal, floats with `%g`, booleans as `0`/`1`, chars as their code point

@@ -32,6 +32,29 @@ pub fn parse_stmt(p: &mut Parser) -> Result<Stmt, ParseError> {
             p.expect(&Token::RBrace)?;
             Ok(Stmt::While(cond, body))
         }
+        Some(Token::If) => {
+            p.bump();
+            let cond = parse_expr(p)?;
+            p.expect(&Token::LBrace)?;
+            let mut then_body = vec![];
+            while p.peek() != Some(&Token::RBrace) {
+                then_body.push(parse_stmt(p)?);
+            }
+            p.expect(&Token::RBrace)?;
+            let else_body = if p.peek() == Some(&Token::Else) {
+                p.bump();
+                p.expect(&Token::LBrace)?;
+                let mut body = vec![];
+                while p.peek() != Some(&Token::RBrace) {
+                    body.push(parse_stmt(p)?);
+                }
+                p.expect(&Token::RBrace)?;
+                Some(body)
+            } else {
+                None
+            };
+            Ok(Stmt::If(cond, then_body, else_body))
+        }
         Some(Token::Return) => {
             p.bump();
             let expr = parse_expr(p)?;

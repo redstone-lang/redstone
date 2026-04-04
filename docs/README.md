@@ -8,7 +8,7 @@ Redstone is a minimal compiled language with an LLVM backend.
 - [Variables](variables.md) — variable declarations
 - [Functions](functions.md) — function declarations and calls
 - [Expressions](expressions.md) — arithmetic and expressions
-- [Control Flow](control-flow.md) — `while` loops, comparisons, assignment
+- [Control Flow](control-flow.md) — `if`/`else` conditionals, `while` loops, comparisons, assignment
 - [Comments](comments.md) — comments syntax
 
 ## Quick Example
