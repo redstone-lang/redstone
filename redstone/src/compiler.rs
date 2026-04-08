@@ -38,18 +38,4 @@ pub fn compile(src: &str, opts: CompileOptions) -> Result<(), String> {
     }
 }
 
-pub fn compile_and_run(src: &str, output: &str) -> Result<(), String> {
-    compile(src, CompileOptions { output, target: None })?;
 
-    let out = Command::new(output)
-        .output()
-        .map_err(|e| format!("run failed: {e}"))?;
-
-    print!("{}", String::from_utf8_lossy(&out.stdout));
-
-    if out.status.success() {
-        Ok(())
-    } else {
-        Err(format!("program exited with {}", out.status))
-    }
-}
