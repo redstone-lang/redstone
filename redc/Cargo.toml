@@ -1,12 +1,13 @@
 [package]
-name = "rsc"
+name = "redc"
 version = "0.0.0-dev"
 edition = "2024"
 
 [[bin]]
-name = "rsc"
+name = "redc"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "4", features = ["derive"] }
 redstone = { path = "../redstone" }
+clap = { version = "4", features = ["derive"] }
+anstyle = "1.0"

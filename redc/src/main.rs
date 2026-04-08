@@ -1,35 +1,24 @@
-use std::path::PathBuf;
-use clap::{Parser, Subcommand};
+mod print;
+mod cmd;
+mod styles;
+
+use clap::Parser;
 use redstone::compiler::{compile, compile_and_run, CompileOptions};
+use crate::cmd::Cmd;
 
 #[derive(Parser)]
-#[command(name = "rsc", about = "Redstone compiler")]
+#[command(
+    name = "redc",
+    version,
+    about = "Redstone compiler",
+    arg_required_else_help = true,
+    styles=styles::styles()
+)]
 struct Cli {
     #[command(subcommand)]
     command: Cmd,
 }
 
-#[derive(Subcommand)]
-enum Cmd {
-    /// Compile a .red file into a native executable
-    Build {
-        /// Source file to compile
-        file: PathBuf,
-
-        /// Output executable path
-        #[arg(short, long, default_value = "a.out")]
-        output: PathBuf,
-
-        /// Target triple (e.g. x86_64-unknown-linux-gnu)
-        #[arg(long)]
-        target: Option<String>,
-    },
-    /// Compile and immediately run a .red file
-    Run {
-        /// Source file to compile and run
-        file: PathBuf,
-    },
-}
 
 fn main() {
     let cli = Cli::parse();

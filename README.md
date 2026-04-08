@@ -12,165 +12,18 @@ A minimal compiler with an LLVM backend. Visit [docs](./docs/README.md) to learn
 - Output using `print(...)`
 - Comments using `//`
 
-## Examples
+See [examples](./examples)
 
-### Hello, number
+## CLI (`redc`)
 
-```red
-fn main() {
-    print(42);
-    return 0;
-}
-```
-
-### Variables and Arithmetic
-
-```red
-fn main() {
-    let a = 10;
-    let b = 3;
-    let sum = a + b;
-    let diff = a - b;
-    let prod = a * b;
-    let quot = a / b;
-    print(sum);  // 13
-    print(diff); // 7
-    print(prod); // 30
-    print(quot); // 3
-    return 0;
-}
-```
-
-### Typed variables and floats
-
-```red
-fn main() {
-    let x: i32 = 100;
-    let pi: f64 = 3.14;
-    let flag = true;
-    let letter = 'A';
-    print(x);      // 100
-    print(pi);     // 3.14
-    print(flag);   // 1
-    print(letter); // 65
-    return 0;
-}
-```
-
-### Function call
-
-```red
-fn square(x: u64) -> u64 {
-    return x * x;
-}
-
-fn main() {
-    let result = square(9);
-    print(result); // 81
-    return 0;
-}
-```
-
-### Multiple arguments
-
-```red
-fn add(a: u64, b: u64) -> u64 {
-    return a + b;
-}
-
-fn mul(a: u64, b: u64) -> u64 {
-    a * b;
-}
-
-fn main() {
-    let x = add(3, 4); // 7
-    let y = mul(x, 2); // 14
-    print(y);
-    return 0;
-}
-```
-
-### Nested Calls
-
-```red
-fn double(x: u64) -> u64 {
-    return x * 2;
-}
-
-fn inc(x: u64) -> u64 {
-    return x + 1;
-}
-
-fn main() {
-    print(double(inc(5))); // 12
-    return 0;
-}
-```
-
-### Fibonacci
-
-```red
-fn fibonacci(n: u64) -> u64 {
-    let a = 1;
-    let b = 0;
-    let count = 0;
-    while count < n {
-        let tmp = a + b;
-        b = a;
-        a = tmp;
-        count += 1;
-    }
-    b
-}
-
-fn main() -> i32 {
-    print(fibonacci(32)); // 2178309
-    return 0;
-}
-```
-
-### Conditionals
-
-```red
-fn max(a: i64, b: i64) -> i64 {
-    let result = a;
-    if b > a {
-        result = b;
-    }
-    result
-}
-
-fn main() -> i32 {
-    print(max(3, 7));   // 7
-    print(max(10, 4));  // 10
-    return 0;
-}
-```
-
-### Expressions in Arguments
-
-```red
-fn add(a: u64, b: u64) -> u64 {
-    return a + b;
-}
-
-fn main() {
-    let x = add(2 * 3, 10 - 4); // add(6, 6) = 12
-    print(x);
-    return 0;
-}
-```
-
-## CLI (`rsc`)
-
-The `rsc` binary is the command-line interface to the compiler.
+The `redc` binary is the command-line interface to the compiler.
 
 ### Build
 
 Compile a `.red` source file into a native executable:
 
 ```sh
-rsc build <file>
+redc build <file>
 ```
 
 Options:
@@ -183,9 +36,9 @@ Options:
 Examples:
 
 ```sh
-rsc build main.red
-rsc build main.red --output my_program
-rsc build main.red --output my_program --target x86_64-unknown-linux-gnu
+redc build main.red
+redc build main.red --output my_program
+redc build main.red --output my_program --target x86_64-unknown-linux-gnu
 ```
 
 ### Run
@@ -193,13 +46,13 @@ rsc build main.red --output my_program --target x86_64-unknown-linux-gnu
 Compile and immediately execute a `.red` source file:
 
 ```sh
-rsc run <file>
+redc run <file>
 ```
 
 Example:
 
 ```sh
-rsc run main.red
+redc run main.red
 ```
 
 ## Limitations
