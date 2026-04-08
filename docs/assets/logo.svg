@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4B2B"/>
+      <stop offset="100%" stop-color="#FF416C"/>
+    </linearGradient>
+  </defs>
+  <!-- Hexagonal background -->
+  <polygon
+     points="60,6 108,33 108,87 60,114 12,87 12,33"
+     fill="url(#g)"
+     id="polygon2" />
+  <!-- Letter R as single path, centered -->
+  <path
+     d="M 36,30 V 90 H 47 V 65 H 62 L 76,90 H 88 L 73,63 A 20,18 0 0 0 62,30 Z m 11,11 v 13 h 16 c 2.322226,-4.022214 2.322226,-8.977786 0,-13 z"
+     fill="#ffffff"
+     fill-rule="evenodd"
+  />
+</svg>

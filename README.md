@@ -1,6 +1,8 @@
-A minimal compiler with an LLVM backend. Visit [docs](./docs/README.md) to learn the language
+# Redstone lang
 
-## Syntax
+<img src="docs/assets/logo.svg" align="right" alt="Holynet logo" width="120" height="178">
+
+A simple yet powerful statically compiled general-purpose programming language. Visit [docs](./docs/README.md) to learn more.
 
 - Primitive types: `i8`, `i16`, `i32`, `i64`, `i128`, `isize`, `u8`, `u16`, `u32`, `u64`, `u128`, `usize`, `f32`, `f64`, `bool`, `char`, `()`
 - Default type is `i64` when no annotation is given
@@ -12,7 +14,18 @@ A minimal compiler with an LLVM backend. Visit [docs](./docs/README.md) to learn
 - Output using `print(...)`
 - Comments using `//`
 
+> [!WARNING]  
+> Not ready for production use
+
 See [examples](./examples)
+
+
+## Limitations
+
+- No strings
+- No recursion with non-trivial depth (no tail call optimization)
+- `print` outputs integers as decimal, floats with `%g`, booleans as `0`/`1`, chars as their code point
+
 
 ## CLI (`redc`)
 
@@ -54,9 +67,3 @@ Example:
 ```sh
 redc run main.red
 ```
-
-## Limitations
-
-- No strings
-- No recursion with non-trivial depth (no tail call optimization)
-- `print` outputs integers as decimal, floats with `%g`, booleans as `0`/`1`, chars as their code point
