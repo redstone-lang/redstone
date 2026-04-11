@@ -10,3 +10,6 @@ path = "src/lib.rs"
 [dependencies]
 logos = "0.16.1"
 inkwell = { git = "https://github.com/TheDan64/inkwell", branch = "master", features = ["llvm22-1"] }
+
+[dev-dependencies]
+tempfile = "3"

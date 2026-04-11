@@ -37,5 +37,3 @@ pub fn compile(src: &str, opts: CompileOptions) -> Result<(), String> {
         Err(format!("linker exited with {}", status))
     }
 }
-
-

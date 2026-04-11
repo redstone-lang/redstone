@@ -1,6 +1,6 @@
 # Control Flow
 
-## `if` / `else`
+## `if` / `else` [✅ implemented]
 
 Executes a block conditionally. The `else` branch is optional.
 
@@ -28,7 +28,7 @@ fn max(a: i64, b: i64) -> i64 {
 }
 ```
 
-## `while` loop
+## `while` loop [✅ implemented]
 
 Repeats a block as long as the condition is true.
 
@@ -49,7 +49,7 @@ fn main() {
 }
 ```
 
-## Comparison operators
+## Comparison operators [✅ implemented]
 
 Used in conditions:
 
@@ -64,13 +64,7 @@ Used in conditions:
 
 Comparison expressions evaluate to `bool`.
 
-## Assignment inside loops
-
-Variables declared with `let` can be reassigned:
-
-```red
-x = <expression>;
-```
+## Assignment operators [✅ implemented]
 
 Compound assignment operators are also supported:
 
@@ -81,7 +75,7 @@ Compound assignment operators are also supported:
 | `*=`     | `x = x * ...` |
 | `/=`     | `x = x / ...` |
 
-## Implicit return
+## Implicit return [✅ implemented]
 
 The last expression in a function body can be written without `return` and without a trailing `;`:
 
