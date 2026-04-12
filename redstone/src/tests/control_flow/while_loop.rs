@@ -1,4 +1,3 @@
-use std::fmt::format;
 use crate::tests::try_run;
 
 #[test]

@@ -1,6 +1,6 @@
 # Expressions
 
-## Arithmetic Operators
+## Arithmetic Operators [✅ implemented]
 
 | Operator | Description                               |
 |----------|-------------------------------------------|
@@ -9,7 +9,7 @@
 | `*`      | Multiplication                            |
 | `/`      | Division (integer, truncates toward zero) |
 
-## Comparison Operators
+## Comparison Operators [✅ implemented]
 
 | Operator | Description           |
 |----------|-----------------------|
@@ -34,7 +34,7 @@ fn main() {
 }
 ```
 
-## Operator Precedence
+## Operator Precedence [✅ implemented]
 
 Standard math precedence applies: `*` and `/` bind tighter than `+` and `-`.
 
@@ -48,7 +48,7 @@ Use parentheses to control evaluation order:
 let x = (2 + 3) * 4; // 20
 ```
 
-## Literals
+## Literals [✅ implemented]
 
 Integer literals are decimal numbers, optionally negative:
 

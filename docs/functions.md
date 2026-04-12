@@ -1,6 +1,6 @@
 # Functions
 
-## Declaration
+## Declaration [✅ implemented]
 
 ```red
 fn <name>(<params>) -> <return_type> {
@@ -16,7 +16,7 @@ fn add(a: i64, b: i64) -> i64 {
 }
 ```
 
-## Return type
+## Return type [✅ implemented]
 
 Explicit return type is written after `->`:
 
