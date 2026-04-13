@@ -11,7 +11,7 @@ hero:
       link: /docs
     - theme: alt
       text: View on GitHub
-      link: https://github.com/jkearnsl/redstone
+      link: https://github.com/redstone-lang/redstone
 
 features:
   - icon: ⚡

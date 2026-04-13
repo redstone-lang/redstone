@@ -1,5 +1,6 @@
 import {defineConfig, HeadConfig, resolveSiteDataByRoute} from 'vitepress'
 import tailwindcss from '@tailwindcss/vite'
+import { enConfig } from '../config'
 
 
 const siteUrl = 'https://redstone-lang.org'
@@ -20,17 +21,12 @@ export default defineConfig({
   },
 
   locales: {
-    root: { label: 'English', lang: 'en-US', dir: 'ltr' },
+    root: { label: 'English', lang: 'en-US', dir: 'ltr', ...enConfig },
     ru: { label: 'Русский', lang: 'ru-RU', dir: 'ltr' },
   },
 
   themeConfig: {
     logo: '/assets/logo.svg',
-
-    nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Docs', link: '/en' },
-    ],
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/redstone-lang/redstone' }
