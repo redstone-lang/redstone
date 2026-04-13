@@ -27,15 +27,12 @@ export default defineConfig({
 
   themeConfig: {
     logo: '/assets/logo.svg',
-
     socialLinks: [
       { icon: 'github', link: 'https://github.com/redstone-lang/redstone' }
     ],
-
     footer: {
       message: 'Released under the MIT License.',
     },
-
     search: {
       provider: 'local'
     }
