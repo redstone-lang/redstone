@@ -5,9 +5,6 @@ hero:
   name: "Redstone"
   text: "The programming language you want to see"
   tagline: Simple, statically compiled, LLVM-powered
-  image:
-    src: /assets/logo.svg
-    alt: Redstone logo
   actions:
     - theme: brand
       text: Get Started
