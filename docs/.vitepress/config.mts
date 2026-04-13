@@ -1,4 +1,5 @@
 import {defineConfig, HeadConfig, resolveSiteDataByRoute} from 'vitepress'
+import tailwindcss from '@tailwindcss/vite'
 
 const localeToOgLocaleMap: Record<string, string> = {
   root: 'en_US',
@@ -11,6 +12,9 @@ const ogImage = new URL('/og.jpg', siteUrl).href
 
 export default defineConfig({
   title: "Redstone",
+  vite: {
+    plugins: [tailwindcss()],
+  },
   description: "A simple yet powerful statically compiled general-purpose programming language",
   lang: 'en-US',
   head: [['link', { rel: 'icon', href: '/assets/logo.svg' }]],
