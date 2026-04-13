@@ -1,17 +1,12 @@
 import {defineConfig, HeadConfig, resolveSiteDataByRoute} from 'vitepress'
 import tailwindcss from '@tailwindcss/vite'
 
-const localeToOgLocaleMap: Record<string, string> = {
-  root: 'en_US',
-  ru: 'ru_RU',
-}
 
-const siteUrl = 'https://vitepress.dev'
-
-const ogImage = new URL('/og.jpg', siteUrl).href
+const siteUrl = 'https://redstone-lang.org'
 
 export default defineConfig({
   title: "Redstone",
+  assetsDir: "/assets",
   vite: {
     plugins: [tailwindcss()],
   },
@@ -51,6 +46,12 @@ export default defineConfig({
   },
 
   transformPageData: (pageData, ctx) => {
+    const ogImage = new URL('assets/og.jpg', siteUrl).href
+    const localeToOgLocaleMap: Record<string, string> = {
+      root: 'en_US',
+      ru: 'ru_RU',
+    }
+
     const url = new URL(pageData.relativePath.replace(/(?:(^|\/)index)?\.md$/, '$1'), siteUrl).href
     const site = resolveSiteDataByRoute(ctx.siteConfig.site, pageData.relativePath)
     const title = pageData.title ? `${pageData.title} | Redstone` : site.title
