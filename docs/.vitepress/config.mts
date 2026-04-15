@@ -12,7 +12,7 @@ export default defineConfig({
   },
   description: "A simple yet powerful statically compiled general-purpose programming language",
   lang: 'en-US',
-  head: [['link', { rel: 'icon', href: 'public/logo.svg' }]],
+  head: [['link', { rel: 'icon', href: 'logo.svg' }]],
   lastUpdated: true,
 
   rewrites: {
@@ -25,7 +25,7 @@ export default defineConfig({
   },
 
   themeConfig: {
-    logo: 'public/logo.svg',
+    logo: 'logo.svg',
     socialLinks: [
       { icon: 'github', link: 'https://github.com/redstone-lang/redstone' }
     ],
