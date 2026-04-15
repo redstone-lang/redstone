@@ -1,6 +1,6 @@
 # Redstone lang
 
-<img src="docs/assets/logo.svg" align="right" alt="Holynet logo" width="120" height="178">
+<img src="docs/public/logo.svg" align="right" alt="Holynet logo" width="120" height="178">
 
 A simple yet powerful statically compiled general-purpose programming language. Visit [docs](./docs/README.md) to learn more.
 

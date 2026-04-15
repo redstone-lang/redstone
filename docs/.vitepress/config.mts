@@ -7,13 +7,12 @@ const siteUrl = 'https://redstone-lang.org'
 
 export default defineConfig({
   title: "Redstone",
-  assetsDir: "/assets",
   vite: {
     plugins: [tailwindcss()],
   },
   description: "A simple yet powerful statically compiled general-purpose programming language",
   lang: 'en-US',
-  head: [['link', { rel: 'icon', href: '/assets/logo.svg' }]],
+  head: [['link', { rel: 'icon', href: 'public/logo.svg' }]],
   lastUpdated: true,
 
   rewrites: {
@@ -26,7 +25,7 @@ export default defineConfig({
   },
 
   themeConfig: {
-    logo: '/assets/logo.svg',
+    logo: 'public/logo.svg',
     socialLinks: [
       { icon: 'github', link: 'https://github.com/redstone-lang/redstone' }
     ],
