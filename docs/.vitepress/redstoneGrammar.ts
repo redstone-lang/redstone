@@ -1,4 +1,6 @@
-export const redstoneGrammar = {
+import {LanguageInput} from 'shiki'
+
+export const redstoneGrammar: LanguageInput = {
   name: 'red',
   aliases: ['redstone'],
   scopeName: 'source.red',

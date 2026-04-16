@@ -13,7 +13,7 @@ export default defineConfig({
   },
   description: "A simple yet powerful statically compiled general-purpose programming language",
   markdown: {
-    languages: [redstoneGrammar as any],
+    languages: [redstoneGrammar],
   },
   lang: 'en-US',
   head: [['link', { rel: 'icon', href: 'logo.svg' }]],

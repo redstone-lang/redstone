@@ -39,7 +39,7 @@ fn main() -> i32 {
 onMounted(async () => {
   const highlighter = await createHighlighter({
     themes: ['github-light', 'github-dark'],
-    langs: [redstoneGrammar as any],
+    langs: [redstoneGrammar],
   })
   html.value = highlighter.codeToHtml(code, {
     lang: 'red',
@@ -48,6 +48,19 @@ onMounted(async () => {
   })
 })
 </script>
+
+<style>
+/* Apply light/dark token colors for runtime-generated Shiki HTML.
+   VitePress switches themes by toggling the `dark` class on <html>.
+   defaultColor: false means Shiki only emits --shiki-light/--shiki-dark
+   custom properties — we must wire them up ourselves. */
+.hero-code-wrap .shiki span {
+  color: var(--shiki-light);
+}
+html.dark .hero-code-wrap .shiki span {
+  color: var(--shiki-dark);
+}
+</style>
 
 <style scoped>
 :deep(.shiki) {
@@ -69,13 +82,5 @@ onMounted(async () => {
   overflow-x: auto;
 }
 
-/* light mode: use --shiki-light variable */
-:deep(.shiki span) {
-  color: var(--shiki-light);
-}
 
-/* dark mode: switch to --shiki-dark variable */
-:global(html.dark) :deep(.shiki span) {
-  color: var(--shiki-dark);
-}
 </style>
