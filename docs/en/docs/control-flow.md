@@ -1,21 +1,6 @@
 # Control Flow
 
+See the Control Flow section in the sidebar for the full guide:
 
-## Implicit return [✅ implemented]
-
-The last expression in a function body can be written without `return` and without a trailing `;`:
-
-```red
-fn fibonacci(n: u64) -> u64 {
-    let a = 1;
-    let b = 0;
-    let count = 0;
-    while count < n {
-        let tmp = a + b;
-        b = a;
-        a = tmp;
-        count += 1;
-    }
-    b
-}
-```
+- [If Expressions](control-flow/if-expressions) — conditional branching
+- [Loops](control-flow/repetition-with-loops) — `while` loops

@@ -1,6 +1,6 @@
 # Expressions
 
-## Arithmetic Operators [✅ implemented]
+## Arithmetic Operators
 
 | Operator | Description                               |
 |----------|-------------------------------------------|
@@ -9,7 +9,42 @@
 | `*`      | Multiplication                            |
 | `/`      | Division (integer, truncates toward zero) |
 
-## Comparison Operators [✅ implemented]
+```red
+fn main() {
+    let a = 10;
+    let b = 3;
+    print(a + b); // 13
+    print(a - b); // 7
+    print(a * b); // 30
+    print(a / b); // 3
+    return 0;
+}
+```
+
+## Assignment Operators
+
+Compound assignment operators combine an arithmetic operation with reassignment:
+
+| Operator | Equivalent   |
+|----------|--------------|
+| `+=`     | `x = x + y`  |
+| `-=`     | `x = x - y`  |
+| `*=`     | `x = x * y`  |
+| `/=`     | `x = x / y`  |
+
+```red
+fn main() {
+    let x = 10;
+    x += 5;  // 15
+    x -= 3;  // 12
+    x *= 2;  // 24
+    x /= 4;  // 6
+    print(x);
+    return 0;
+}
+```
+
+## Comparison Operators
 
 | Operator | Description           |
 |----------|-----------------------|
@@ -24,17 +59,15 @@ Comparison expressions evaluate to `bool`.
 
 ```red
 fn main() {
-    let a = 10;
-    let b = 3;
-    print(a + b); // 13
-    print(a - b); // 7
-    print(a * b); // 30
-    print(a / b); // 3
+    print(1 < 2);  // 1
+    print(1 > 2);  // 0
+    print(1 == 1); // 1
+    print(1 != 2); // 1
     return 0;
 }
 ```
 
-## Operator Precedence [✅ implemented]
+## Operator Precedence
 
 Standard math precedence applies: `*` and `/` bind tighter than `+` and `-`.
 
@@ -48,7 +81,7 @@ Use parentheses to control evaluation order:
 let x = (2 + 3) * 4; // 20
 ```
 
-## Literals [✅ implemented]
+## Literals
 
 Integer literals are decimal numbers, optionally negative:
 

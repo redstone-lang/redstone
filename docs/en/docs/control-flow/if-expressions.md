@@ -1,4 +1,4 @@
-# `if` Expressions [✅ implemented]
+# `if` Expressions
 
 Executes a block conditionally. The `else` branch is optional.
 

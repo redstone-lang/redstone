@@ -1,11 +1,7 @@
-# Comments [✅ implemented]
+# Comments
 
-All programmers strive to make their code easy to understand, 
-but sometimes extra explanation is warranted. In these cases, 
-programmers leave comments in their source code that the compiler 
-will ignore but that people reading the source code may find useful.
+Redstone supports single-line comments. The compiler ignores everything from `//` to the end of the line.
 
-The following type of comments are supported in redstone:
 ```red
 // This is a full-line comment
 let x = 10; // inline comment

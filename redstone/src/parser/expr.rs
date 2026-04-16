@@ -3,9 +3,23 @@ use crate::parser::cursor::Parser;
 use crate::parser::error::ParseError;
 use crate::parser::lexer::Token;
 
+/// Top-level expression: handles `+`, `-`, and all comparison operators,
+/// with `*` and `/` binding tighter (via `parse_multiplicative`).
 pub fn parse_expr(p: &mut Parser) -> Result<Expr, ParseError> {
+    let mut lhs = parse_multiplicative(p)?;
+    while let Some(op) = peek_additive_or_cmp(p) {
+        p.bump();
+        let rhs = parse_multiplicative(p)?;
+        lhs = Expr::BinOp(Box::new(lhs), op, Box::new(rhs));
+    }
+    Ok(lhs)
+}
+
+/// Multiplicative level: handles `*` and `/`.
+pub fn parse_multiplicative(p: &mut Parser) -> Result<Expr, ParseError> {
     let mut lhs = parse_term(p)?;
-    while let Some(op) = peek_binop(p) {
+    while matches!(p.peek(), Some(Token::Star) | Some(Token::Slash)) {
+        let op = if p.peek() == Some(&Token::Star) { BinOp::Mul } else { BinOp::Div };
         p.bump();
         let rhs = parse_term(p)?;
         lhs = Expr::BinOp(Box::new(lhs), op, Box::new(rhs));
@@ -61,7 +75,7 @@ pub fn parse_term(p: &mut Parser) -> Result<Expr, ParseError> {
     }
 }
 
-fn parse_arg_list(p: &mut Parser) -> Result<Vec<Expr>, ParseError> {
+pub fn parse_arg_list(p: &mut Parser) -> Result<Vec<Expr>, ParseError> {
     let mut args = vec![];
     if p.peek() == Some(&Token::RParen) {
         return Ok(args);
@@ -74,12 +88,11 @@ fn parse_arg_list(p: &mut Parser) -> Result<Vec<Expr>, ParseError> {
     Ok(args)
 }
 
-pub fn peek_binop(p: &Parser) -> Option<BinOp> {
+/// Operators at the additive level and all comparison operators.
+pub fn peek_additive_or_cmp(p: &Parser) -> Option<BinOp> {
     match p.peek() {
         Some(Token::Plus)  => Some(BinOp::Add),
         Some(Token::Minus) => Some(BinOp::Sub),
-        Some(Token::Star)  => Some(BinOp::Mul),
-        Some(Token::Slash) => Some(BinOp::Div),
         Some(Token::Lt)    => Some(BinOp::Lt),
         Some(Token::Gt)    => Some(BinOp::Gt),
         Some(Token::Le)    => Some(BinOp::Le),

@@ -1,15 +1,12 @@
 use crate::tests::try_run;
 
 #[test]
-fn test_basic_arithmetic() -> Result<(), String> {
+fn test_let_and_print() -> Result<(), String> {
     const SRC: &str = r#"
     fn main() {
         let a = 10;
-        let b = 3;
-        print(a + b);
-        print(a - b);
-        print(a * b);
-        print(a / b);
+        let b = a * 2;
+        print(b);
         return 0;
     }
     "#;
@@ -22,48 +19,19 @@ fn test_basic_arithmetic() -> Result<(), String> {
 
     assert_eq!(
         String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
-        "13\n7\n30\n3\n"
+        "20\n"
     );
 
     Ok(())
 }
 
 #[test]
-fn test_operator_precedence() -> Result<(), String> {
+fn test_reassignment() -> Result<(), String> {
     const SRC: &str = r#"
     fn main() {
-        print(2 + 3 * 4);
-        print((2 + 3) * 4);
-        return 0;
-    }
-    "#;
-
-    let result = try_run(SRC)?.output().map_err(|e| format!("program run failed: {e}"))?;
-    if !result.status.success() {
-        return Err(String::from_utf8(result.stderr)
-            .map_err(|e| format!("read utf8 from stderr: {e}"))?);
-    }
-
-    assert_eq!(
-        String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
-        "14\n20\n"
-    );
-
-    Ok(())
-}
-
-#[test]
-fn test_assignment_operators() -> Result<(), String> {
-    const SRC: &str = r#"
-    fn main() {
-        let a = 0;
-
-        a += 5;
-        a -= 1;
-        a *= 2;
-        a /= 4;
-
-        print(a);
+        let x = 1;
+        x = 2;
+        print(x);
         return 0;
     }
     "#;
@@ -77,6 +45,54 @@ fn test_assignment_operators() -> Result<(), String> {
     assert_eq!(
         String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
         "2\n"
+    );
+
+    Ok(())
+}
+
+#[test]
+fn test_typed_variable_i32() -> Result<(), String> {
+    const SRC: &str = r#"
+    fn main() {
+        let x: i32 = 100;
+        print(x);
+        return 0;
+    }
+    "#;
+
+    let result = try_run(SRC)?.output().map_err(|e| format!("program run failed: {e}"))?;
+    if !result.status.success() {
+        return Err(String::from_utf8(result.stderr)
+            .map_err(|e| format!("read utf8 from stderr: {e}"))?);
+    }
+
+    assert_eq!(
+        String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
+        "100\n"
+    );
+
+    Ok(())
+}
+
+#[test]
+fn test_typed_variable_u64() -> Result<(), String> {
+    const SRC: &str = r#"
+    fn main() {
+        let x: u64 = 255;
+        print(x);
+        return 0;
+    }
+    "#;
+
+    let result = try_run(SRC)?.output().map_err(|e| format!("program run failed: {e}"))?;
+    if !result.status.success() {
+        return Err(String::from_utf8(result.stderr)
+            .map_err(|e| format!("read utf8 from stderr: {e}"))?);
+    }
+
+    assert_eq!(
+        String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
+        "255\n"
     );
 
     Ok(())

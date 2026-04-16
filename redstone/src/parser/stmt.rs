@@ -1,7 +1,7 @@
-use crate::ast::{BinOp, Stmt, Type};
+use crate::ast::{BinOp, Expr, Stmt, Type};
 use crate::parser::cursor::Parser;
 use crate::parser::error::ParseError;
-use crate::parser::expr::parse_expr;
+use crate::parser::expr::{parse_arg_list, parse_expr, parse_multiplicative, peek_additive_or_cmp};
 use crate::parser::lexer::Token;
 use crate::parser::types::parse_type;
 
@@ -70,7 +70,6 @@ pub fn parse_stmt(p: &mut Parser) -> Result<Stmt, ParseError> {
             Ok(Stmt::Print(expr))
         }
         Some(Token::Ident(_)) => {
-            // peek ahead: if next-next is `=` or `+=` etc, it's an assignment
             let name = p.expect_ident()?;
             match p.peek() {
                 Some(Token::Eq) => {
@@ -84,9 +83,16 @@ pub fn parse_stmt(p: &mut Parser) -> Result<Stmt, ParseError> {
                 Some(Token::StarEq) => { p.bump(); let e = parse_expr(p)?; p.expect(&Token::Semi)?; Ok(Stmt::AssignOp(name, BinOp::Mul, e)) }
                 Some(Token::SlashEq) => { p.bump(); let e = parse_expr(p)?; p.expect(&Token::Semi)?; Ok(Stmt::AssignOp(name, BinOp::Div, e)) }
                 _ => {
-                    // not an assignment — treat as expression statement starting with a variable
-                    use crate::ast::Expr;
-                    let lhs = Expr::Var(name);
+                    // Expression statement: may be a call `foo()`, a variable, or a larger
+                    // expression `a + b * c` where `a` is already consumed.
+                    let lhs = if p.peek() == Some(&Token::LParen) {
+                        p.bump();
+                        let args = parse_arg_list(p)?;
+                        p.expect(&Token::RParen)?;
+                        Expr::Call(name, args)
+                    } else {
+                        Expr::Var(name)
+                    };
                     let expr = parse_expr_with_lhs(p, lhs)?;
                     if p.peek() == Some(&Token::Semi) {
                         p.bump();
@@ -97,25 +103,30 @@ pub fn parse_stmt(p: &mut Parser) -> Result<Stmt, ParseError> {
         }
         _ => {
             let expr = parse_expr(p)?;
-            // implicit return: last expr without semicolon
             if p.peek() == Some(&Token::Semi) {
                 p.bump();
-                Ok(Stmt::Expr(expr))
-            } else {
-                Ok(Stmt::Expr(expr))
             }
+            Ok(Stmt::Expr(expr))
         }
     }
 }
 
-fn parse_expr_with_lhs(p: &mut Parser, lhs: crate::ast::Expr) -> Result<crate::ast::Expr, ParseError> {
-    use crate::ast::Expr;
-    use crate::parser::expr::peek_binop;
-    let mut lhs = lhs;
-    while let Some(op) = peek_binop(p) {
+/// Continue parsing an expression whose leading term `lhs` was already consumed.
+/// Respects operator precedence: `*`/`/` bind tighter than `+`/`-` and comparisons.
+fn parse_expr_with_lhs(p: &mut Parser, lhs: Expr) -> Result<Expr, ParseError> {
+    // lhs is at term level — collect any trailing * or / first
+    let mut cur = lhs;
+    while matches!(p.peek(), Some(Token::Star) | Some(Token::Slash)) {
+        let op = if p.peek() == Some(&Token::Star) { BinOp::Mul } else { BinOp::Div };
         p.bump();
         let rhs = crate::parser::expr::parse_term(p)?;
-        lhs = Expr::BinOp(Box::new(lhs), op, Box::new(rhs));
+        cur = Expr::BinOp(Box::new(cur), op, Box::new(rhs));
     }
-    Ok(lhs)
+    // cur is now at multiplicative level — handle additive / comparison
+    while let Some(op) = peek_additive_or_cmp(p) {
+        p.bump();
+        let rhs = parse_multiplicative(p)?;
+        cur = Expr::BinOp(Box::new(cur), op, Box::new(rhs));
+    }
+    Ok(cur)
 }

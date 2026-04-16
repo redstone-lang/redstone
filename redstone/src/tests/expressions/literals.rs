@@ -1,15 +1,10 @@
 use crate::tests::try_run;
 
 #[test]
-fn test_basic_arithmetic() -> Result<(), String> {
+fn test_integer_literal() -> Result<(), String> {
     const SRC: &str = r#"
     fn main() {
-        let a = 10;
-        let b = 3;
-        print(a + b);
-        print(a - b);
-        print(a * b);
-        print(a / b);
+        print(42);
         return 0;
     }
     "#;
@@ -22,18 +17,18 @@ fn test_basic_arithmetic() -> Result<(), String> {
 
     assert_eq!(
         String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
-        "13\n7\n30\n3\n"
+        "42\n"
     );
 
     Ok(())
 }
 
 #[test]
-fn test_operator_precedence() -> Result<(), String> {
+fn test_float_literal() -> Result<(), String> {
     const SRC: &str = r#"
     fn main() {
-        print(2 + 3 * 4);
-        print((2 + 3) * 4);
+        let pi: f64 = 3.14;
+        print(pi);
         return 0;
     }
     "#;
@@ -46,24 +41,18 @@ fn test_operator_precedence() -> Result<(), String> {
 
     assert_eq!(
         String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
-        "14\n20\n"
+        "3.14\n"
     );
 
     Ok(())
 }
 
 #[test]
-fn test_assignment_operators() -> Result<(), String> {
+fn test_bool_literal() -> Result<(), String> {
     const SRC: &str = r#"
     fn main() {
-        let a = 0;
-
-        a += 5;
-        a -= 1;
-        a *= 2;
-        a /= 4;
-
-        print(a);
+        print(true);
+        print(false);
         return 0;
     }
     "#;
@@ -76,7 +65,31 @@ fn test_assignment_operators() -> Result<(), String> {
 
     assert_eq!(
         String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
-        "2\n"
+        "1\n0\n"
+    );
+
+    Ok(())
+}
+
+#[test]
+fn test_char_literal() -> Result<(), String> {
+    const SRC: &str = r#"
+    fn main() {
+        print('A');
+        return 0;
+    }
+    "#;
+
+    let result = try_run(SRC)?.output().map_err(|e| format!("program run failed: {e}"))?;
+    if !result.status.success() {
+        return Err(String::from_utf8(result.stderr)
+            .map_err(|e| format!("read utf8 from stderr: {e}"))?);
+    }
+
+    // 'A' is printed as its numeric code point: 65
+    assert_eq!(
+        String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
+        "65\n"
     );
 
     Ok(())

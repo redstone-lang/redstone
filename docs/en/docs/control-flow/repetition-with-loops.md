@@ -1,6 +1,6 @@
 # Repetition with Loops
 
-## `while` loop [✅ implemented]
+## `while` loop
 
 Repeats a block as long as the condition is true.
 
@@ -21,16 +21,6 @@ fn main() {
 }
 ```
 
-## `for` loop [❌ not implemented]
+## `for` loop
 
-todo
-
-```red
-fn main() {
-    for number in (1..4).rev() {
-        print(number);
-    }
-    print(123);
-    return 0;
-}
-```
+> Not yet implemented.

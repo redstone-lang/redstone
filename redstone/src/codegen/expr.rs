@@ -64,11 +64,16 @@ pub fn compile_expr<'ctx>(
                 .iter()
                 .map(|a| compile_expr(cg, a, func, vars).into())
                 .collect();
-            cg.builder
+            let call = cg.builder
                 .build_call(callee, &compiled_args, "call")
-                .unwrap()
-                .try_as_basic_value()
-                .unwrap_basic()
+                .unwrap();
+            // Void functions have no basic value; produce a unit dummy in that case.
+            match call.try_as_basic_value() {
+                inkwell::values::ValueKind::Basic(v) => v,
+                inkwell::values::ValueKind::Instruction(_) => {
+                    cg.ctx.i8_type().const_int(0, false).into()
+                }
+            }
         }
     }
 }

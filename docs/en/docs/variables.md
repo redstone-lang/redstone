@@ -27,4 +27,4 @@ A variable declared with `let` can be reassigned:
 x = <expression>;
 ```
 
-Compound assignment operators are also available: `+=`, `-=`, `*=`, `/=`. See [Control Flow](control-flow.md) for details.
+Compound assignment operators are also available: `+=`, `-=`, `*=`, `/=`. See [Expressions](expressions.md) for details.

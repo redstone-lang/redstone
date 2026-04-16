@@ -4,6 +4,9 @@ use crate::compiler::{compile, CompileOptions};
 mod comments;
 mod control_flow;
 mod expressions;
+mod functions;
+mod types;
+mod variables;
 
 fn try_build(src: &str) -> Result<(), String> {
     let tmp_file = NamedTempFile::new().map_err(|e| format!("create temp file: {}", e))?;

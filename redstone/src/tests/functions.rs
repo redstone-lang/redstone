@@ -1,15 +1,15 @@
 use crate::tests::try_run;
 
 #[test]
-fn test_basic_arithmetic() -> Result<(), String> {
+fn test_function_call() -> Result<(), String> {
     const SRC: &str = r#"
+    fn add(a: i64, b: i64) -> i64 {
+        return a + b;
+    }
+
     fn main() {
-        let a = 10;
-        let b = 3;
-        print(a + b);
-        print(a - b);
-        print(a * b);
-        print(a / b);
+        let x = add(3, 4);
+        print(x);
         return 0;
     }
     "#;
@@ -22,18 +22,22 @@ fn test_basic_arithmetic() -> Result<(), String> {
 
     assert_eq!(
         String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
-        "13\n7\n30\n3\n"
+        "7\n"
     );
 
     Ok(())
 }
 
 #[test]
-fn test_operator_precedence() -> Result<(), String> {
+fn test_expr_in_args() -> Result<(), String> {
     const SRC: &str = r#"
+    fn add(a: i64, b: i64) -> i64 {
+        return a + b;
+    }
+
     fn main() {
-        print(2 + 3 * 4);
-        print((2 + 3) * 4);
+        let x = add(2 * 3, 10 - 4);
+        print(x);
         return 0;
     }
     "#;
@@ -46,24 +50,25 @@ fn test_operator_precedence() -> Result<(), String> {
 
     assert_eq!(
         String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
-        "14\n20\n"
+        "12\n"
     );
 
     Ok(())
 }
 
 #[test]
-fn test_assignment_operators() -> Result<(), String> {
+fn test_nested_calls() -> Result<(), String> {
     const SRC: &str = r#"
+    fn inc(x: i64) -> i64 {
+        return x + 1;
+    }
+
+    fn double(x: i64) -> i64 {
+        return x * 2;
+    }
+
     fn main() {
-        let a = 0;
-
-        a += 5;
-        a -= 1;
-        a *= 2;
-        a /= 4;
-
-        print(a);
+        print(double(inc(5)));
         return 0;
     }
     "#;
@@ -76,7 +81,34 @@ fn test_assignment_operators() -> Result<(), String> {
 
     assert_eq!(
         String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
-        "2\n"
+        "12\n"
+    );
+
+    Ok(())
+}
+
+#[test]
+fn test_void_function() -> Result<(), String> {
+    const SRC: &str = r#"
+    fn greet() {
+        print(72);
+    }
+
+    fn main() {
+        greet();
+        return 0;
+    }
+    "#;
+
+    let result = try_run(SRC)?.output().map_err(|e| format!("program run failed: {e}"))?;
+    if !result.status.success() {
+        return Err(String::from_utf8(result.stderr)
+            .map_err(|e| format!("read utf8 from stderr: {e}"))?);
+    }
+
+    assert_eq!(
+        String::from_utf8(result.stdout).map_err(|e| format!("read utf8 from stdout: {e}"))?,
+        "72\n"
     );
 
     Ok(())
