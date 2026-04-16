@@ -1,38 +1,81 @@
 <template>
-  <div class="relative rounded-2xl px-6 py-5 text-sm leading-7 font-mono
+  <div class="hero-code-wrap relative rounded-2xl px-4 py-4 sm:px-6 sm:py-5
               bg-white/90 dark:bg-black/50 backdrop-blur-md
               border border-white/10
               shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.08)]
-              min-w-100">
-    <pre class="m-0 overflow-x-auto"><code><span class="kw">fn</span> <span class="name">fibonacci</span>(<span>n</span>: <span class="type">u64</span>) -&gt; <span class="type">u64</span> {
-    <span class="kw">let</span> <span>a</span> = <span class="num">1</span>;
-    <span class="kw">let</span> <span>b</span> = <span class="num">0</span>;
-    <span class="kw">let</span> <span>count</span> = <span class="num">0</span>;
-
-    <span class="kw">while</span> <span>count</span> &lt; <span>n</span> {
-        <span class="kw">let</span> <span>tmp</span> = <span>a</span> + <span>b</span>;
-        <span>b</span> = <span>a</span>;
-        <span>a</span> = <span>tmp</span>;
-        <span>count</span> += <span class="num">1</span>;
-    }
-
-    <span>b</span>
-}
-
-<span class="kw">fn</span> <span class="name">main</span>() -&gt; <span class="type">i32</span> {
-    <span class="name">print</span>(<span class="name">fibonacci</span>(<span class="num">32</span>));
-    <span class="kw">return</span> <span class="num">0</span>;
-}</code></pre>
+              w-full max-w-xs sm:max-w-sm mx-auto">
+    <div v-if="html" v-html="html" class="text-left" />
+    <pre v-else class="m-0 text-xs sm:text-sm leading-6 sm:leading-7 font-mono invisible text-left">{{ code }}</pre>
   </div>
 </template>
 
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { redstoneGrammar } from '../redstoneGrammar'
+import { createHighlighter } from 'shiki'
+
+const html = ref('')
+
+const code = `fn fibonacci(n: u64) -> u64 {
+    let a = 1;
+    let b = 0;
+    let count = 0;
+
+    while count < n {
+        let tmp = a + b;
+        b = a;
+        a = tmp;
+        count += 1;
+    }
+
+    b
+}
+
+fn main() -> i32 {
+    print(fibonacci(32));
+    return 0;
+}`
+
+onMounted(async () => {
+  const highlighter = await createHighlighter({
+    themes: ['github-light', 'github-dark'],
+    langs: [redstoneGrammar as any],
+  })
+  html.value = highlighter.codeToHtml(code, {
+    lang: 'red',
+    themes: { light: 'github-light', dark: 'github-dark' },
+    defaultColor: false,
+  })
+})
+</script>
+
 <style scoped>
-.kw   { color: #ac6a6a; }
-.dark .kw   { color: #ea9292; }
-.name { color: #546ea5; }
-.dark .name { color: #82aaff; }
-.type { color: #ae8a48; }
-.dark .type { color: #ffcb6b; }
-.num  { color: #af5b42; }
-.dark .num  { color: #f78c6c; }
+:deep(.shiki) {
+  background: transparent !important;
+  font-family: inherit;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  :deep(.shiki) {
+    font-size: 0.875rem;
+    line-height: 1.75rem;
+  }
+}
+
+:deep(pre) {
+  margin: 0;
+  overflow-x: auto;
+}
+
+/* light mode: use --shiki-light variable */
+:deep(.shiki span) {
+  color: var(--shiki-light);
+}
+
+/* dark mode: switch to --shiki-dark variable */
+:global(html.dark) :deep(.shiki span) {
+  color: var(--shiki-dark);
+}
 </style>

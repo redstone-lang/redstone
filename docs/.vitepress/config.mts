@@ -1,6 +1,7 @@
 import {defineConfig, HeadConfig, resolveSiteDataByRoute} from 'vitepress'
 import tailwindcss from '@tailwindcss/vite'
-import { enConfig } from '../config'
+import { enConfig } from './en'
+import { redstoneGrammar } from './redstoneGrammar'
 
 
 const siteUrl = 'https://redstone-lang.org'
@@ -11,6 +12,9 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   description: "A simple yet powerful statically compiled general-purpose programming language",
+  markdown: {
+    languages: [redstoneGrammar as any],
+  },
   lang: 'en-US',
   head: [['link', { rel: 'icon', href: 'logo.svg' }]],
   lastUpdated: true,
@@ -38,7 +42,7 @@ export default defineConfig({
   },
 
   transformPageData: (pageData, ctx) => {
-    const ogImage = new URL('assets/og.jpg', siteUrl).href
+    const ogImage = new URL('og.jpg', siteUrl).href
     const localeToOgLocaleMap: Record<string, string> = {
       root: 'en_US',
       ru: 'ru_RU',

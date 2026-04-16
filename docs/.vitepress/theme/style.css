@@ -134,6 +134,20 @@
   animation: hero-blob 10s ease-in-out infinite;
 }
 
+@media (max-width: 959px) {
+  .VPHero.has-image .main {
+    order: 1;
+  }
+  .VPHero.has-image .image {
+    order: 2;
+    margin: 32px 0 0;
+  }
+  .VPHero.has-image .image-container {
+    width: 100%;
+    height: auto;
+  }
+}
+
 /**
  * Component: Custom Block
  * -------------------------------------------------------------------------- */
